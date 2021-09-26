@@ -1,0 +1,9 @@
+name: RedstoneLinkPlugin
+version: 1.0
+author: JupiterPi (Jonathan Kraus)
+main: de.jupiterpi.mc.redstonelink.RedstoneLinkPlugin
+api-version: 1.14
+commands:
+  pin:
+    description: Gives you a Pin Block item.
+    usage: /pin [number] [in|out]
