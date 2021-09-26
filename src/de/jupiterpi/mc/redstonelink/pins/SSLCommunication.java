@@ -4,6 +4,7 @@ import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import de.jupiterpi.mc.redstonelink.ConfigFile;
 
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -20,8 +21,7 @@ public class SSLCommunication {
         this.password = password;
 
         jsch = new JSch();
-        jsch.setKnownHosts("***"); // probably redundant, will be fetched from res file
-        //TODO implement res file
+        jsch.setKnownHosts(ConfigFile.getProperty("known_hosts")); // probably redundant
 
         // session
 
@@ -45,7 +45,7 @@ public class SSLCommunication {
             new Thread(() -> {
                 try {
                     PrintStream stream = new PrintStream(channel.getOutputStream(), true);
-                    String command = "echo " + password + " | sudo -S ***"; // will be fetched from res file, TODO implement res file
+                    String command = "echo " + password + " | sudo -S " + ConfigFile.getProperty("rpi-rdl-home") + "/in.sh";
                     stream.print(command);
                     stream.print("\n");
 

@@ -1,6 +1,7 @@
 package de.jupiterpi.mc.redstonelink.pins;
 
 import com.jcraft.jsch.JSchException;
+import de.jupiterpi.mc.redstonelink.ConfigFile;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
@@ -8,10 +9,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class GPIOControlUnit {
-    private static final String HOST = "***"; // will be fetched from res file
-    private static final String USERNAME = "***"; // will be fetched from res file
-    private static final String PASSWORD = "***"; // will be fetched from res file
-    //TODO implement res file
+    private static final String HOST = ConfigFile.getProperty("host");
+    private static final String USERNAME = ConfigFile.getProperty("username");
+    private static final String PASSWORD = ConfigFile.getProperty("password");
 
     List<GPIOPin> pins = new ArrayList<>();
 
@@ -65,8 +65,7 @@ public class GPIOControlUnit {
         public void onInput(String str, Consumer<String> out) {
             send = out;
             if (str.contains("$")) {
-                print("sudo ***"); // will be fetched from res file
-                //TODO implement res file
+                print("sudo " + ConfigFile.getProperty("rpi-rdl-home") + "/out.sh");
             } else if (str.contains("[sudo]")) {
                 print(PASSWORD);
                 commandsQueueReady = true;

@@ -1,0 +1,7 @@
+host: 192.168.178.42
+username: pi
+password: raspberry
+
+rpi-rdl-home: ./redstone-link
+
+known_hosts: C:\Users\<USERNAME>\.ssh\known_hosts
