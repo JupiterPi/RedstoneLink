@@ -5,7 +5,10 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import de.jupiterpi.mc.redstonelink.ConfigFile;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Properties;
@@ -33,6 +36,7 @@ public class SSLCommunication {
         session.setConfig(config);
 
         session.connect();
+        debug("connected to " + username + "@" + host);
     }
 
     // input channel
@@ -41,6 +45,7 @@ public class SSLCommunication {
         try {
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
             channel.connect();
+            debug("connected input channel");
 
             new Thread(() -> {
                 try {
@@ -52,7 +57,8 @@ public class SSLCommunication {
                     InputStream in = channel.getInputStream();
                     byte[] tmp = new byte[1024];
                     while (true) {
-                        while (in.available() > 0) {
+                        while (true) {
+                            if (!(in.available() > 0)) break;
                             int i = in.read(tmp, 0, 1024);
 
                             String str = new String(tmp, 0, i);
@@ -61,7 +67,7 @@ public class SSLCommunication {
                             }
                         }
                     }
-                } catch (Exception e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }).start();
@@ -85,6 +91,7 @@ public class SSLCommunication {
         try {
             outputChannel = (ChannelShell) session.openChannel("shell");
             outputChannel.connect();
+            debug("connected output channel");
 
             stream = new PrintStream(outputChannel.getOutputStream(), true);
 
@@ -116,5 +123,11 @@ public class SSLCommunication {
     private void send(String str) {
         stream.print(str);
         stream.print("\n");
+    }
+
+    // util
+
+    private void debug(String message) {
+        Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GRAY + "[RdL-debug] " + message);
     }
 }

@@ -71,7 +71,7 @@ public class GPIOControlUnit {
                 commandsQueueReady = true;
             } else {
                 if (commandsQueueReady) {
-                    print(commandsQueue.get(0));
+                    sendCommand(commandsQueue.get(0));
                     commandsQueue.remove(0);
                     if (commandsQueue.isEmpty()) {
                         commandsQueue = null;
@@ -83,10 +83,15 @@ public class GPIOControlUnit {
 
         public void send(String str) {
             if (commandsQueue == null) {
-                print(str);
+                sendCommand(str);
             } else {
                 commandsQueue.add(str);
             }
+        }
+
+        private void sendCommand(String cmd) {
+            System.out.println("Sending command: " + cmd);
+            print(cmd);
         }
     }
 
